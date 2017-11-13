@@ -1,0 +1,16 @@
+Package: ClassifySpreadsheets
+Title: Classify Spreadsheets by Various Metrics
+Version: 0.0.0.9000
+Authors@R: person("Duncan", "Garmonsway", email = "duncan.garmonsway@gmail.com", role = c("aut", "cre"))
+Description: A 20% time project at the Government Digital Service, experimenting
+    with ways to classify spreadsheets.  First attempt: use t-SNE to classify by
+    the shape of the used cells in a sheet, similar to classifying written
+    digits in the MNIST data.
+Depends: R (>= 3.4.2)
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
