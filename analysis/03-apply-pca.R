@@ -29,7 +29,7 @@ contributions <-
 contributions %>%
   gather(dim, contribution, starts_with("Dim.")) %>%
   mutate(dim = as.integer(str_sub(dim, 5L))) %>%
-  ggplot(aes(col, row, fill = contribution)) +
+  ggplot(aes(col, row, fill = abs(contribution))) +
     geom_tile() +
     scale_x_continuous(limits = range(view_rows)) +
     scale_y_reverse(limits = rev(range(view_cols))) +
