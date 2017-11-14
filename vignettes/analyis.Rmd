@@ -164,7 +164,7 @@ Here are the sheets at the extremes of the first two dimensions.
 #### Dim 1 high
 `r knitr::include_graphics("extreme-dim1-high-darrell_schoolcraft__7735.png")`
 
-#### Dim 2 high
+#### Dim 2 low
 `r knitr::include_graphics("extreme-dim2-low-joe_stepenovitch__15114_results.png")`
 
 #### Dim 2 high
