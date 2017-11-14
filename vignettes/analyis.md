@@ -1,7 +1,7 @@
 ---
 title: "Classify Spreadsheets"
 author: "Duncan Garmonsway"
-date: "`r Sys.Date()`"
+date: "2017-11-14"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -10,12 +10,7 @@ vignette: >
 bibliography: bibliography.bib
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+
 
 # Classify spreadsheets
 
@@ -73,9 +68,12 @@ the same size).  Options:
    screen, that is the range `A1:Z42` on a blank sheet, but in the end I used
    a 25 by 25 square, `A1:Y25`.
 
-```{r}
+
+```r
 knitr::include_graphics("sheet-view-range-a1z42.png")
 ```
+
+![plot of chunk unnamed-chunk-1](sheet-view-range-a1z42.png)
 
 Because t-SNE is so computationally expensive, it's a good idea to either avoid
 high resolution altogether, or to make a first pass with PCA.  Via
@@ -113,35 +111,61 @@ cases was 25 by 25 cells.
 
 The screenshots below the graph show what the original spreadsheets look like.
 
-```{r}
+
+```r
 knitr::include_graphics("view-ranges.png")
+```
+
+![plot of chunk unnamed-chunk-2](view-ranges.png)
+
+```r
 knitr::include_graphics("andy_zipper__234.png")
+```
+
+![plot of chunk unnamed-chunk-2](andy_zipper__234.png)
+
+```r
 knitr::include_graphics("andy_zipper__141_Financial_Gas.png")
+```
+
+![plot of chunk unnamed-chunk-2](andy_zipper__141_Financial_Gas.png)
+
+```r
 knitr::include_graphics("andy_zipper__238_DD-Lookup.png")
+```
+
+![plot of chunk unnamed-chunk-2](andy_zipper__238_DD-Lookup.png)
+
+```r
 knitr::include_graphics("andy_zipper__238_DD-EDL.png")
+```
+
+![plot of chunk unnamed-chunk-2](andy_zipper__238_DD-EDL.png)
+
+```r
 knitr::include_graphics("andrea_ring__49.png")
+```
+
+![plot of chunk unnamed-chunk-2](andrea_ring__49.png)
+
+```r
 knitr::include_graphics("andy_zipper__141_E-mail.png")
 ```
 
-```{r, include = FALSE}
-# knitr::include_graphics("darrell_schoolcraft__7686.png")
-# knitr::include_graphics("geir_solberg__11254.png")
-# knitr::include_graphics("larry_campbell__21445.png")
-# knitr::include_graphics("lisa_gang__22462.png")
-# knitr::include_graphics("sally_beck__35235-CapChrg-AllocExp.png")
-# knitr::include_graphics("sally_beck__35235-Headcount.png")
-```
+![plot of chunk unnamed-chunk-2](andy_zipper__141_E-mail.png)
+
+
 
 ### PCA
 
 The PCA identifies one crucial dimension, and several less important but still
 valuable ones.
 
-`r knitr::include_graphics("fviz_eig.png")`
+![](fviz_eig.png)
 
 Individual sheets are not influential.
 
-`r knitr::include_graphics("fviz_contrib_ind.png")`
+![](fviz_contrib_ind.png)
 
 The patterns of influential cells across different dimensions are interesting.
 First it looks for cells generally towards the middle and bottom right, then it
@@ -149,38 +173,38 @@ looks to the left and right edges, then specifically the top few rows.
 Eventually it gets to more detail, but this is harder to interpret.  Column 7 is
 particularly influential on the fifth dimension -- seems a little odd.
 
-`r knitr::include_graphics("cell_contributions.png")`
+![](cell_contributions.png)
 
 The scattergraph suggests many sheets that are similar in the first dimension
 are also similar in the second.
 
-`r knitr::include_graphics("fviz_pca_ind.png")`
+![](fviz_pca_ind.png)
 
 Here are the sheets at the extremes of the first two dimensions.
 
 #### Dim 1 low
-`r knitr::include_graphics("extreme-dim1-low-joe_stepenovitch__15114.png")`
+![](extreme-dim1-low-joe_stepenovitch__15114.png)
 
 #### Dim 1 high
-`r knitr::include_graphics("extreme-dim1-high-darrell_schoolcraft__7735.png")`
-
-#### Dim 2 low
-`r knitr::include_graphics("extreme-dim2-low-joe_stepenovitch__15114_results.png")`
+![](extreme-dim1-high-darrell_schoolcraft__7735.png)
 
 #### Dim 2 high
-`r knitr::include_graphics("extreme-dim2-high-rick_buy__23729.png")`
+![](extreme-dim2-low-joe_stepenovitch__15114_results.png)
 
-#### Dim 3 low
-`r knitr::include_graphics("extreme-dim3-low-frank_ermis__11194.png")`
+#### Dim 2 high
+![](extreme-dim2-high-rick_buy__23729.png)
 
-#### Dim 3 high
-`r knitr::include_graphics("extreme-dim3-high-darrell_schoolcraft__7735.png")`
+#### Dim 2 high
+![](extreme-dim3-low-frank_ermis__11194_results.png)
+
+#### Dim 2 high
+![](extreme-dim3-high-darrell_schoolcraft__7735.png)
 
 ### t-SNE
 
 Applyin t-SNE, the cloud does not show as clear a pattern as the PCA.
 
-`r knitr::include_graphics("tsne-1000.png")`
+![](tsne-1000.png)
 
 # Resources
 

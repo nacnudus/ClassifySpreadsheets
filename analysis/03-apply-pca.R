@@ -43,13 +43,13 @@ ggsave(here("vignettes", "fviz_pca_ind.png"), width = 25.14187, height = 13.5111
 
 # Get the file/sheet of the extremes in each of the first two dimensions
 individuals <-
-  pca$ind$coord[, 1:2] %>%
+  pca$ind$coord[, 1:3] %>%
   as_data_frame() %>%
   mutate(file_sheet = rownames(feature_matrix)) %>%
   select(file_sheet, everything())
 
-extremes <-
-  individuals %>%
-  filter(Dim.1 == min(Dim.1) | Dim.1 == max(Dim.1)
-         | Dim.2 == min(Dim.2) | Dim.2 == max(Dim.2)) %>%
+individuals %>%
+  filter(Dim.1 %in% range(Dim.1)
+         | Dim.2 %in% range(Dim.2)
+         | Dim.3 %in% range(Dim.3)) %>%
   arrange(Dim.1, Dim.2)
