@@ -38,10 +38,27 @@ books <-
 view_range <- crossing(row = view_rows, col = view_cols)
 
 load_view_range <- function(x) {
-  x %>%
-  xlsx_cells() %>%
-  inner_join(view_range, by = c("row", "col")) %>% # filter for the view range
-  select(sheet, row, col, is_blank, local_format_id)
+  cells <- xlsx_cells(x)
+  formats <- xlsx_formats(x)$local
+  formatting <-
+    data_frame(biu = formats$font$bold
+                     | formats$font$italic
+                     | !is.na(formats$font$underline),
+               fill = !is.na(formats$fill$patternFill$patternType),
+               border = !is.na(formats$border$top$style)
+                        | !is.na(formats$border$bottom$style)
+                        | !is.na(formats$border$left$style)
+                        | !is.na(formats$border$right$style),
+               indent = formats$alignment$indent != 0L) %>%
+    mutate(local_format_id = row_number())
+  cells %>%
+    inner_join(view_range, by = c("row", "col")) %>% # filter for the view range
+    select(sheet, row, col, character, numeric, date, is_blank, local_format_id) %>%
+    mutate(character = !is.na(character),
+           numeric = !is.na(numeric),
+           date = !is.na(date)) %>%
+    left_join(formatting, by = "local_format_id") %>%
+    select(-local_format_id)
 }
 
 view_ranges <-
@@ -52,7 +69,13 @@ view_ranges <-
   complete(row = view_rows,
            col = view_cols,
            fill = list(is_blank = TRUE,
-                       local_format_id = 1L)) %>%
+                       biu = FALSE,
+                       fill = FALSE,
+                       border = FALSE,
+                       indent = FALSE,
+                       character = FALSE,
+                       numeric = FALSE,
+                       date = FALSE)) %>%
   ungroup()
 
 # Check that there is a complete view range for all sheets
