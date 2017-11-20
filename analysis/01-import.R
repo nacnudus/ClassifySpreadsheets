@@ -65,6 +65,13 @@ view_ranges <-
   map_dfr(books$path, load_view_range, .id = "id") %>%
   inner_join(books, by = "id") %>%
   select(-id, -path) %>%
+  mutate(biu       = !is_blank & biu,
+         fill      = !is_blank & fill,
+         border    = !is_blank & border,
+         indent    = !is_blank & indent,
+         character = !is_blank & character,
+         numeric   = !is_blank & numeric,
+         date      = !is_blank & date) %>%
   group_by(filename, sheet) %>% # pad each view range with blanks
   complete(row = view_rows,
            col = view_cols,
@@ -117,6 +124,31 @@ pwalk(list(image_inputs$matrix, image_inputs$filename, image_inputs$sheet),
       ~ {image(..1, axes = FALSE); title(..2, sub = ..3)})
 par(mfrow=c(1, 1))
 par(adj = 0.5)
+
+png(here("vignettes", "view-range-andy_zipper__234.png"),
+    width = 954, height = 512, units = "px")
+image(image_inputs$matrix[[1]], axes = FALSE)
+title(image_inputs$filename[1], sub = image_inputs$sheet[1])
+dev.off()
+
+png(here("vignettes", "view-range-andy_zipper__238.png"),
+    width = 954, height = 512, units = "px")
+image(image_inputs$matrix[[3]], axes = FALSE)
+title(image_inputs$filename[3], sub = image_inputs$sheet[3])
+dev.off()
+
+png(here("vignettes", "feature-matrix-one-row.png"),
+    width = 954, height = 140, units = "px")
+image(t(feature_matrix[1, , drop = FALSE]), axes = FALSE)
+title("One row of the feature matrix")
+dev.off()
+
+png(here("vignettes", "feature-matrix-detail.png"),
+    width = 954, height = 512, units = "px")
+image(t(feature_matrix[1:625, , drop = FALSE]), axes = FALSE)
+title("625 rows of the feature matrix",
+      sub = "Each row is all the cells in one sheet, laid out in a line")
+dev.off()
 
 # Save that visualisation for the vignette
 par(mfrow = c(2, 3))

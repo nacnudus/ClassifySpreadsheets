@@ -79,7 +79,7 @@ knitr::include_graphics("sheet-view-range-a1z42.png")
 
 Because t-SNE is so computationally expensive, it's a good idea to either avoid
 high resolution altogether, or to make a first pass with PCA.  Via
-[@luckylwk](https://medium.com/@luckylwk/visualising-high-dimensional-datasets-using-pca-and-t-sne-in-python-8ef87e7915b):
+[luckylwk](https://medium.com/@luckylwk/visualising-high-dimensional-datasets-using-pca-and-t-sne-in-python-8ef87e7915b):
 
 > one of the recommendations is that, in case of very high dimensional data, you
 > may need to apply another dimensionality reduction technique before using
@@ -157,9 +157,11 @@ particularly influential on the fifth dimension -- seems a little odd.
 The scattergraph suggests many sheets that are similar in the first dimension
 are also similar in the second.
 
-`r knitr::include_graphics("fviz_pca_ind.png")`
+`r knitr::include_graphics("fviz_pca_ind_1-2.png")`
+`r knitr::include_graphics("fviz_pca_ind_1-3.png")`
+`r knitr::include_graphics("fviz_pca_ind_2-3.png")`
 
-Here are the sheets at the extremes of the first two dimensions.
+Here are the sheets at the extremes of the first three dimensions.
 
 #### Dim 1 low
 `r knitr::include_graphics("extreme-dim1-low-joe_stepenovitch__15114.png")`
@@ -178,6 +180,61 @@ Here are the sheets at the extremes of the first two dimensions.
 
 #### Dim 3 high
 `r knitr::include_graphics("extreme-dim3-high-darrell_schoolcraft__7735.png")`
+
+### PCA with formatting features
+
+The PCA still identifies one crucial dimension, and several less important but
+nevertheless valuable ones.
+
+`r knitr::include_graphics("fviz_eig_formats.png")`
+
+Individual sheets are not influential.
+
+`r knitr::include_graphics("fviz_contrib_ind_formats.png")`
+
+The patterns of influential cells across different dimensions, and by different
+features of a cell (whether it is blank, whether it is bold/underlined/italic)
+are interesting.
+
+* No attention is paid to `fill`.
+* `is_blank` only really becomes important in higher dimensions, probably due to
+  multiple similar versions of particular spreadsheets.  Presumably the
+  information in `is_blank` is proxied by the information in the various
+  datatypes (`character`, `numeric`, etc.).
+* `character` is not influential, surprisingly, wherease `date` and `numeric`
+  are influential in the second dimension in the cells where a table would
+  usually have the data (rather than the headers).
+* `indent` is surprisingly influential in the both dimensions, first in the
+  'data' range, and then in the 'header' range.  Was it a habit of a prolific
+  individual?  `border` is similar.
+* `biu` (bold/italic/underline) is where it really happens, in the third
+  dimension.
+
+`r knitr::include_graphics("cell_contributions_formats.png")`
+
+`r knitr::include_graphics("fviz_pca_ind_formats_1-2.png")`
+`r knitr::include_graphics("fviz_pca_ind_formats_1-3.png")`
+`r knitr::include_graphics("fviz_pca_ind_formats_2-3.png")`
+
+Here are the sheets at the extremes of the first three dimensions.
+
+#### Dim 1 low
+`r knitr::include_graphics("extreme-dim1-low-chris_germany__2674.png")`
+
+#### Dim 1 high
+`r knitr::include_graphics("extreme-dim1-high-benjamin_rogers__945.png")`
+
+#### Dim 2 low
+`r knitr::include_graphics("extreme-dim2-low-lisa_gang__22271.png")`
+
+#### Dim 2 high
+`r knitr::include_graphics("extreme-dim2-high-benjamin_rogers__945.png")`
+
+#### Dim 3 low
+`r knitr::include_graphics("extreme-dim3-low-rick_buy__32790.png")`
+
+#### Dim 3 high
+`r knitr::include_graphics("extreme-dim3-high-harry_arora__12153.png")`
 
 ### t-SNE
 
