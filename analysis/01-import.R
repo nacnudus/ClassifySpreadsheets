@@ -35,18 +35,20 @@ books <-
              filename = basename(paths)) %>%
   mutate(id = as.character(row_number()))
 
-all_sheets <-
-  map_dfr(books$path, xlsx_cells, .id = "id") %>%
-  inner_join(books, by = "id") %>%
-  select(filename, everything(), -id, -path)
-
 view_range <- crossing(row = view_rows, col = view_cols)
 
-view_ranges <-
-  all_sheets %>%
+load_view_range <- function(x) {
+  x %>%
+  xlsx_cells() %>%
   filter(!is_blank) %>% # blanks will be reinstated in a moment
   inner_join(view_range, by = c("row", "col")) %>% # filter for the view range
-  select(filename, sheet, row, col) %>%
+  select(sheet, row, col)
+}
+
+view_ranges <-
+  map_dfr(books$path, load_view_range, .id = "id") %>%
+  inner_join(books, by = "id") %>%
+  select(-id) %>%
   mutate(value = 1L) %>% # encode any non-blank cells as 1
   group_by(filename, sheet) %>% # pad each view range with blanks
   complete(row = view_rows, col = view_cols, fill = list(value = 0L)) %>%
