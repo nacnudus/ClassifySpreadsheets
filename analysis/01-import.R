@@ -53,8 +53,6 @@ view_ranges <-
            col = view_cols,
            fill = list(is_blank = TRUE,
                        local_format_id = 1L)) %>%
-  mutate(value = 1 - is_blank) %>%
-  select(-is_blank) %>%
   ungroup()
 
 # Check that there is a complete view range for all sheets
@@ -64,8 +62,7 @@ nrow(view_ranges) / nrow(view_range) == nrow(distinct(view_ranges, filename, she
 feature_matrix <-
   view_ranges %>%
   arrange(filename, sheet, row, col) %>%
-  rename(y = row, x = col, z = value) %>% # encode non-blanks as 1
-  mutate(z = 1L - z) %>% # Make red = value rather than no value
+  rename(y = row, x = col, z = is_blank) %>% # encode non-blanks as 0
   pull(z) %>%
   matrix(ncol = nrow(view_range), byrow = TRUE)
 feature_names <-
@@ -81,8 +78,7 @@ dim(feature_matrix)
 # Plot a few of them.  red = value, beige = blank
 image_inputs <-
   view_ranges %>%
-  rename(x = row, y = col, z = value) %>%
-  mutate(z = 1L - z) %>% # Make red = value rather than no value
+  rename(x = row, y = col, z = is_blank) %>%
   group_by(filename, sheet) %>%
   arrange(filename, sheet, desc(x), y) %>% # Flip along a horizontal axis for plotting
   ungroup() %>%
