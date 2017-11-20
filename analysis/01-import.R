@@ -40,18 +40,21 @@ view_range <- crossing(row = view_rows, col = view_cols)
 load_view_range <- function(x) {
   x %>%
   xlsx_cells() %>%
-  filter(!is_blank) %>% # blanks will be reinstated in a moment
   inner_join(view_range, by = c("row", "col")) %>% # filter for the view range
-  select(sheet, row, col)
+  select(sheet, row, col, is_blank, local_format_id)
 }
 
 view_ranges <-
   map_dfr(books$path, load_view_range, .id = "id") %>%
   inner_join(books, by = "id") %>%
   select(-id) %>%
-  mutate(value = 1L) %>% # encode any non-blank cells as 1
   group_by(filename, sheet) %>% # pad each view range with blanks
-  complete(row = view_rows, col = view_cols, fill = list(value = 0L)) %>%
+  complete(row = view_rows,
+           col = view_cols,
+           fill = list(is_blank = TRUE,
+                       local_format_id = 1L)) %>%
+  mutate(value = 1 - is_blank) %>%
+  select(-is_blank) %>%
   ungroup()
 
 # Check that there is a complete view range for all sheets
@@ -61,7 +64,7 @@ nrow(view_ranges) / nrow(view_range) == nrow(distinct(view_ranges, filename, she
 feature_matrix <-
   view_ranges %>%
   arrange(filename, sheet, row, col) %>%
-  rename(y = row, x = col, z = value) %>%
+  rename(y = row, x = col, z = value) %>% # encode non-blanks as 1
   mutate(z = 1L - z) %>% # Make red = value rather than no value
   pull(z) %>%
   matrix(ncol = nrow(view_range), byrow = TRUE)
