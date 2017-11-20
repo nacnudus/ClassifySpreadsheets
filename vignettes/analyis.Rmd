@@ -134,6 +134,9 @@ knitr::include_graphics("andy_zipper__141_E-mail.png")
 
 ### PCA
 
+Is it okay to use PCA on binary variables?  [Perhaps, who
+knows?](https://stats.stackexchange.com/questions/16331/doing-principal-component-analysis-or-factor-analysis-on-binary-data).
+
 The PCA identifies one crucial dimension, and several less important but still
 valuable ones.
 
