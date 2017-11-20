@@ -64,7 +64,7 @@ load_view_range <- function(x) {
 view_ranges <-
   map_dfr(books$path, load_view_range, .id = "id") %>%
   inner_join(books, by = "id") %>%
-  select(-id) %>%
+  select(-id, -path) %>%
   group_by(filename, sheet) %>% # pad each view range with blanks
   complete(row = view_rows,
            col = view_cols,
