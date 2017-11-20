@@ -85,7 +85,8 @@ nrow(view_ranges) / nrow(view_range) == nrow(distinct(view_ranges, filename, she
 feature_matrix <-
   view_ranges %>%
   arrange(filename, sheet, row, col) %>%
-  rename(y = row, x = col, z = is_blank) %>% # encode non-blanks as 0
+  rename(y = row, x = col, z = is_blank) %>%
+  mutate(z = as.integer(z)) %>% # encode blanks as 0
   pull(z) %>%
   matrix(ncol = nrow(view_range), byrow = TRUE)
 feature_names <-
@@ -102,6 +103,7 @@ dim(feature_matrix)
 image_inputs <-
   view_ranges %>%
   rename(x = row, y = col, z = is_blank) %>%
+  mutate(z = as.integer(z)) %>% # encode blanks as 0
   group_by(filename, sheet) %>%
   arrange(filename, sheet, desc(x), y) %>% # Flip along a horizontal axis for plotting
   ungroup() %>%
